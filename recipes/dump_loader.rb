@@ -1,5 +1,4 @@
 if node['mirage']['dump_path']
-
   execute "copy dump" do
     command "cp #{node['mirage']['dump_path']} /tmp/db_dump.sql.gz"
     creates "/tmp/db_dump.sql.gz"

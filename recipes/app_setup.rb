@@ -29,3 +29,8 @@ execute "collectstatic" do
   command "#{manage_py} collectstatic --noinput"
   user node['app']['user']
 end
+
+execute "create cache table" do
+  command "#{manage_py} createcachetable"
+  user node['app']['user']
+end
