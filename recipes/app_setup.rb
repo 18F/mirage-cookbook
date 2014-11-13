@@ -10,7 +10,7 @@ end
 fixtures = ['naics', 'setasides', 'pools']
 fixtures.each do |fixture|
   cmd = "#{manage_py} loaddata "
-  cmd << "#{deploy_to_dir}/current/vendor/fixtures/#{fixture}.json "
+  cmd << "#{deploy_to_dir}/current/vendor/fixtures/#{fixture}.json"
   cmd << "&& touch #{deploy_to_dir}/fixture-#{fixture}"
   execute "load #{fixture} fixture" do
     command cmd
