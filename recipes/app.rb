@@ -3,7 +3,6 @@ include_recipe 'postgresql::client'
 include_recipe 'user'
 include_recipe 'mirage::ec2_vars'
 include_recipe 'mirage::dump_loader'
-include_recipe 'mirage::crons'
 include_recipe 'shipper'
 
 deploy_to_dir = "/var/src/#{node['app']['name']}"
@@ -130,3 +129,5 @@ service node['app']['name'] do
   provider Chef::Provider::Service::Upstart
   action   [:enable, :start]
 end
+
+include_recipe 'mirage::crons'
