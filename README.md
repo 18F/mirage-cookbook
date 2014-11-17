@@ -1,7 +1,7 @@
 Description
 ===========
 
-Installs and configures the latest version of (Mirage)[https://github.com/18f/mirage].
+Installs and configures the latest version of [Mirage](https://github.com/18f/mirage).
 
 Requirements
 ============
