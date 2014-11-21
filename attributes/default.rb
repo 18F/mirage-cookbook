@@ -1,5 +1,5 @@
 default['app']['name'] = 'mirage'
-default['app']['environment'] = 'production'
+default['app']['environment'] = 'vagrant'
 
 default['app']['repo'] = 'https://github.com/18f/mirage'
 

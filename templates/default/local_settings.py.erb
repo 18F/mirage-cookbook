@@ -12,6 +12,7 @@ SAM_API_KEY = ''
 
 SECRET_KEY = '<%= @secret_key %>'
 
+<% if @aws_access_key_id != '' %>
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 
@@ -19,4 +20,4 @@ AWS_ACCESS_KEY_ID = '<%= @aws_access_key_id %>'
 AWS_QUERYSTRING_AUTH = False
 AWS_SECRET_ACCESS_KEY = '<%= @aws_secret_access_key %>'
 AWS_STORAGE_BUCKET_NAME = 'mirage.gsa.gov'
-
+<% end %>
