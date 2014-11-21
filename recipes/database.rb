@@ -1,9 +1,4 @@
 # Set up postgres with root password
-
-apt_package "ruby1.9.1-dev" do
-  action :nothing
-end.run_action(:install)
-
 include_recipe 'postgresql::server'
 include_recipe 'postgresql::client'
 include_recipe 'database::postgresql'

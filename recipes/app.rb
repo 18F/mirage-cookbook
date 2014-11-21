@@ -42,9 +42,12 @@ shipper_config "mirage" do
   github_key node['github_key']
   shared_files shared_files
   before_symlink [
+    "pip install -r #{deploy_to_dir}/current/requirements.txt",
+    "pip install -r #{deploy_to_dir}/current/requirements_py2.txt",
+    "#{deploy_to_dir}/current/manage.py collectstatic --noinput"
   ]
   after_symlink [
-    "kill -HUP `service mirage status | grep -o '[0-9]\+'`"
+    "service mirage reload"
   ]
 end
 
@@ -108,6 +111,10 @@ end
 
 execute "install pip packages" do
   command "pip install -r #{deploy_to_dir}/current/requirements.txt"
+end
+
+execute "install pip packages for python 2" do
+  command "pip install -r #{deploy_to_dir}/current/requirements_py2.txt"
 end
 
 include_recipe 'mirage::app_setup'
