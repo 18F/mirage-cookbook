@@ -1,6 +1,7 @@
 deploy_to_dir = "/var/src/#{node['app']['name']}"
+venv_bin_path = "#{deploy_to_dir}/venv/bin"
 
-manage_py = "#{deploy_to_dir}/current/manage.py"
+manage_py = "#{venv_bin_path}/python #{deploy_to_dir}/current/manage.py"
 
 execute "migrate db" do
   command "#{manage_py} syncdb --noinput"

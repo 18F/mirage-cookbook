@@ -12,4 +12,4 @@ setuid <%= @app_user %>
 chdir <%= @working_dir %>
 
 exec \
-gunicorn <%= @app_id %>.wsgi:application -b :8000 >> <%= @working_dir %>/logs/gunicorn.sys.log 2>&1
+/var/src/mirage/venv/bin/gunicorn <%= @app_id %>.wsgi:application -b :8000 >> <%= @working_dir %>/logs/gunicorn.sys.log 2>&1

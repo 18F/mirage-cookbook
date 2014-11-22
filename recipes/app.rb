@@ -34,6 +34,14 @@ deploy_branch deploy_to_dir do
   # restart_command "touch tmp/restart.txt"
 end
 
+python_virtualenv "#{deploy_to_dir}/venv" do
+  owner node['app']['user']
+  group node['app']['group']
+  action :create
+end
+
+venv_bin_path = "#{deploy_to_dir}/venv/bin"
+
 shipper_config "mirage" do
   repository node['app']['repo']
   environment node['app']['environment']
@@ -42,12 +50,12 @@ shipper_config "mirage" do
   github_key node['github_key']
   shared_files shared_files
   before_symlink [
-    "pip install -r #{deploy_to_dir}/current/requirements.txt",
-    "pip install -r #{deploy_to_dir}/current/requirements_py2.txt",
-    "#{deploy_to_dir}/current/manage.py collectstatic --noinput"
+    "#{venv_bin_path}/pip install -r requirements.txt",
+    "#{venv_bin_path}/pip install -r requirements_py2.txt",
+    "#{venv_bin_path}/python manage.py collectstatic --noinput"
   ]
   after_symlink [
-    "service mirage reload"
+    "kill -HUP `status mirage | egrep -oi '([0-9]+)$'`"
   ]
 end
 
@@ -110,16 +118,20 @@ file "#{nginx_folder}/default.conf" do
 end
 
 execute "install pip packages" do
-  command "pip install -r #{deploy_to_dir}/current/requirements.txt"
+  command "#{venv_bin_path}/pip install -r #{deploy_to_dir}/current/requirements.txt"
+  user node['app']['user']
 end
 
 execute "install pip packages for python 2" do
-  command "pip install -r #{deploy_to_dir}/current/requirements_py2.txt"
+  command "#{venv_bin_path}/pip install -r #{deploy_to_dir}/current/requirements_py2.txt"
+  user node['app']['user']
 end
 
 include_recipe 'mirage::app_setup'
 
-python_pip "gunicorn"
+python_pip "gunicorn" do
+  virtualenv "#{deploy_to_dir}/venv"
+end
 
 # Add upstart script
 template "/etc/init/#{node['app']['name']}.conf" do
