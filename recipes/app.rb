@@ -25,7 +25,6 @@ deploy_branch deploy_to_dir do
   user node['app']['user']
   migrate false
   shallow_clone true
-  keep_releases 3
   action :deploy # or :rollback
   purge_before_symlink shared_files.values
   create_dirs_before_symlink []
