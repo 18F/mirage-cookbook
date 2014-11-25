@@ -41,23 +41,6 @@ end
 
 venv_bin_path = "#{deploy_to_dir}/venv/bin"
 
-shipper_config "mirage" do
-  repository node['app']['repo']
-  environment node['app']['environment']
-  app_path deploy_to_dir
-  app_user node['app']['user']
-  github_key node['github_key']
-  shared_files shared_files
-  before_symlink [
-    "#{venv_bin_path}/pip install -r requirements.txt",
-    "#{venv_bin_path}/pip install -r requirements_py2.txt",
-    "#{venv_bin_path}/python manage.py collectstatic --noinput"
-  ]
-  after_symlink [
-    "kill -HUP `status mirage | egrep -oi '([0-9]+)$'`"
-  ]
-end
-
 directory "#{deploy_to_dir}/shared/config" do
   owner node['app']['user']
   recursive true
@@ -150,4 +133,19 @@ service node['app']['name'] do
   action   [:enable, :start]
 end
 
-include_recipe 'mirage::crons'
+shipper_config "mirage" do
+  repository node['app']['repo']
+  environment node['app']['environment']
+  app_path deploy_to_dir
+  app_user node['app']['user']
+  github_key node['github_key']
+  shared_files shared_files
+  before_symlink [
+    "#{venv_bin_path}/pip install -r requirements.txt",
+    "#{venv_bin_path}/pip install -r requirements_py2.txt",
+    "#{venv_bin_path}/python manage.py collectstatic --noinput"
+  ]
+  after_symlink [
+    "kill -HUP `status mirage | egrep -oi '([0-9]+)$'`"
+  ]
+end
