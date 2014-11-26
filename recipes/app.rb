@@ -109,8 +109,6 @@ execute "install pip packages for python 2" do
   user node['app']['user']
 end
 
-include_recipe 'mirage::app_setup'
-
 python_pip "gunicorn" do
   virtualenv "#{deploy_to_dir}/venv"
 end
