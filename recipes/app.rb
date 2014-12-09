@@ -25,7 +25,6 @@ deploy_branch deploy_to_dir do
   user node['app']['user']
   migrate false
   shallow_clone true
-  keep_releases 3
   action :deploy # or :rollback
   purge_before_symlink shared_files.values
   create_dirs_before_symlink []
@@ -34,19 +33,13 @@ deploy_branch deploy_to_dir do
   # restart_command "touch tmp/restart.txt"
 end
 
-shipper_config "mirage" do
-  repository node['app']['repo']
-  environment node['app']['environment']
-  app_path deploy_to_dir
-  app_user node['app']['user']
-  github_key node['github_key']
-  shared_files shared_files
-  before_symlink [
-  ]
-  after_symlink [
-    "kill -HUP `service mirage status | grep -o '[0-9]\+'`"
-  ]
+python_virtualenv "#{deploy_to_dir}/venv" do
+  owner node['app']['user']
+  group node['app']['group']
+  action :create
 end
+
+venv_bin_path = "#{deploy_to_dir}/venv/bin"
 
 directory "#{deploy_to_dir}/shared/config" do
   owner node['app']['user']
@@ -61,9 +54,9 @@ template "#{deploy_to_dir}/shared/config/local_settings.py" do
     db_host: node['app']['database']['host'],
     db_pass: node['app']['database']['password'],
     secret_key: node['app']['secret_key'],
-    aws_access_key_id: node['app']['aws_access_key_id'],
-    aws_secret_access_key: node['app']['aws_secret_access_key'],
-    sam_api_key: node['app']['sam_api_key']
+    aws_access_key_id: node['app']['s3']['access_key_id'],
+    aws_secret_access_key: node['app']['s3']['secret_access_key'],
+    sam_api_key: node['app']['s3']['sam_api_key']
   )
 end
 
@@ -108,12 +101,18 @@ file "#{nginx_folder}/default.conf" do
 end
 
 execute "install pip packages" do
-  command "pip install -r #{deploy_to_dir}/current/requirements.txt"
+  command "#{venv_bin_path}/pip install -r #{deploy_to_dir}/current/requirements.txt"
+  user node['app']['user']
 end
 
-include_recipe 'mirage::app_setup'
+execute "install pip packages for python 2" do
+  command "#{venv_bin_path}/pip install -r #{deploy_to_dir}/current/requirements_py2.txt"
+  user node['app']['user']
+end
 
-python_pip "gunicorn"
+python_pip "gunicorn" do
+  virtualenv "#{deploy_to_dir}/venv"
+end
 
 # Add upstart script
 template "/etc/init/#{node['app']['name']}.conf" do
@@ -133,4 +132,19 @@ service node['app']['name'] do
   action   [:enable, :start]
 end
 
-include_recipe 'mirage::crons'
+shipper_config "mirage" do
+  repository node['app']['repo']
+  environment node['app']['environment']
+  app_path deploy_to_dir
+  app_user node['app']['user']
+  github_key node['github_key']
+  shared_files shared_files
+  before_symlink [
+    "#{venv_bin_path}/pip install -r requirements.txt",
+    "#{venv_bin_path}/pip install -r requirements_py2.txt",
+    "#{venv_bin_path}/python manage.py collectstatic --noinput"
+  ]
+  after_symlink [
+    "kill -HUP `status mirage | egrep -oi '([0-9]+)$'`"
+  ]
+end
