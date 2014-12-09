@@ -62,7 +62,8 @@ template "#{deploy_to_dir}/shared/config/local_settings.py" do
     db_pass: node['app']['database']['password'],
     secret_key: node['app']['secret_key'],
     aws_access_key_id: node['app']['aws_access_key_id'],
-    aws_secret_access_key: node['app']['aws_secret_access_key']
+    aws_secret_access_key: node['app']['aws_secret_access_key'],
+    sam_api_key: node['app']['sam_api_key']
   )
 end
 
