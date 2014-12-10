@@ -1,5 +1,10 @@
 name "mirage"
-version "0.0.1"
+maintainer "General Services Administration - 18F"
+maintainer_email "devops@gsa.gov"
+description "Install Mirage market research tool"
+version "0.0.2"
+license "CC0"
+
 
 depends 'postgresql', '~> 3.4.4'
 depends 'database'
