@@ -36,6 +36,7 @@ end
 python_virtualenv "#{deploy_to_dir}/venv" do
   owner node['app']['user']
   group node['app']['group']
+  interpreter "python#{node[:python][:version]}"
   action :create
 end
 

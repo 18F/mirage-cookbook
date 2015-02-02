@@ -19,3 +19,5 @@ default['app']['ssl']['key'] = "-----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQE
 
 default['app']['s3']['access_key_id'] = ''
 default['app']['s3']['secret_access_key'] = ''
+
+default['python']['version'] = '3.4'
