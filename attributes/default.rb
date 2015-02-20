@@ -21,3 +21,7 @@ default['app']['s3']['access_key_id'] = ''
 default['app']['s3']['secret_access_key'] = ''
 
 default['python']['version'] = '3.4'
+
+default['app']['sam_api_key'] = 'demo'
+default['app']['api_key'] = 'demo'
+default['app']['api_host'] = 'https://api.data.gov/gsa/discovery/'

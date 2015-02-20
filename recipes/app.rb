@@ -7,6 +7,12 @@ include_recipe 'shipper'
 
 deploy_to_dir = "/var/src/#{node['app']['name']}"
 
+%w(python3.4-dev python-dev).each do |pkg|
+  package pkg do
+    action :upgrade
+  end
+end
+
 # set up user and group
 group node['app']['group']
 
@@ -57,7 +63,9 @@ template "#{deploy_to_dir}/shared/config/local_settings.py" do
     secret_key: node['app']['secret_key'],
     aws_access_key_id: node['app']['s3']['access_key_id'],
     aws_secret_access_key: node['app']['s3']['secret_access_key'],
-    sam_api_key: node['app']['sam_api_key']
+    sam_api_key: node['app']['sam_api_key'],
+    api_key: node['app']['api_key'],
+    api_host: node['app']['api_host']
   )
 end
 

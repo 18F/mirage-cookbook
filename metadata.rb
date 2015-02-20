@@ -5,8 +5,8 @@ description "Install Mirage market research tool"
 version "0.0.3"
 license "CC0"
 
-
-depends 'postgresql', '~> 3.4.4'
+depends 'openssl', '~> 2.0.2'
+depends 'postgresql'
 depends 'database'
 depends 'python'
 depends 'nginx'
