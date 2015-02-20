@@ -114,8 +114,8 @@ execute "install pip packages" do
   user node['app']['user']
 end
 
-execute "install pip packages for python 2" do
-  command "#{venv_bin_path}/pip install -r #{deploy_to_dir}/current/requirements_py2.txt"
+execute "install pip packages for python 3" do
+  command "#{venv_bin_path}/pip install -r #{deploy_to_dir}/current/requirements_py3.txt"
   user node['app']['user']
 end
 
@@ -150,7 +150,7 @@ shipper_config "mirage" do
   shared_files shared_files
   before_symlink [
     "#{venv_bin_path}/pip install -r requirements.txt",
-    "#{venv_bin_path}/pip install -r requirements_py2.txt",
+    "#{venv_bin_path}/pip install -r requirements_py3.txt",
     "#{venv_bin_path}/python manage.py collectstatic --noinput"
   ]
   after_symlink [
