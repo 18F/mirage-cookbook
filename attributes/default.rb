@@ -1,7 +1,7 @@
 default['app']['name'] = 'mirage'
 default['app']['environment'] = 'vagrant'
 
-default['app']['repo'] = 'https://github.com/18f/mirage'
+default['app']['repo'] = 'https://github.com/18f/discovery'
 
 default['app']['user'] = 'app-user'
 default['app']['group'] = 'app-group'
