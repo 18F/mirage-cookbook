@@ -110,12 +110,12 @@ file "#{nginx_folder}/default.conf" do
 end
 
 execute "install pip packages" do
-  command "#{venv_bin_path}/pip install -r #{deploy_to_dir}/current/requirements.txt"
+  command "#{venv_bin_path}/pip install --no-cache-dir -r #{deploy_to_dir}/current/requirements.txt"
   user node['app']['user']
 end
 
 execute "install pip packages for python 3" do
-  command "#{venv_bin_path}/pip install -r #{deploy_to_dir}/current/requirements_py3.txt"
+  command "#{venv_bin_path}/pip install --no-cache-dir -r #{deploy_to_dir}/current/requirements_py3.txt"
   user node['app']['user']
 end
 
